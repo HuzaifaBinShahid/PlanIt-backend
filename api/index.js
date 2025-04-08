@@ -12,9 +12,11 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}))
 app.use(cors());
 
+
 // routes
 app.use("/api/todos", todoRoute)
 
+module.exports.handler = serverless(app);
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => {
