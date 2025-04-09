@@ -7,7 +7,7 @@ router.get("/", getAllTodos)
 
 router.post("/addTodo", AddTodo)
 
-router.put("/editTodo", EditTodo)
+router.put("/editTodo/:id", EditTodo)
 
 router.delete("/deleteTodo/:id", deleteTodo)
 
