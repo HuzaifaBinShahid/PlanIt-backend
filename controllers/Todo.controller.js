@@ -43,6 +43,42 @@ const AddTodo = async (req, res) => {
   }
 };
 
+const EditTodo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: "Todo ID is required" });
+    }
+
+    if (!title || !description) {
+      return res
+        .status(400)
+        .json({ message: "Title and description are required" });
+    }
+
+    const updatedTodo = await Todo.findByIdAndUpdate(
+      id,
+      { title, description, time: new Date() },
+      { new: true }
+    );
+    if (!updatedTodo) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+
+    return res.status(200).json({
+      message: "Todo updated successfully",
+      data: updatedTodo,
+    });
+  } catch (error) {
+    console.error("Error in EditTodo:", error);
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
+  }
+};
+
 const deleteTodo = async (req, res) => {
   try {
     const { id } = req.params;
@@ -70,5 +106,6 @@ const deleteTodo = async (req, res) => {
 module.exports = {
   getAllTodos,
   AddTodo,
+  EditTodo,
   deleteTodo,
 };
