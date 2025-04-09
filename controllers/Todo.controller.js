@@ -2,11 +2,13 @@ const Todo = require("../models/Todos.model");
 
 const getAllTodos = async (req, res) => {
   try {
-    const todos = await Todo.find({});
-    if (todos.length === 0) {
-      return res.status(200).json([]);
-    }
-    return res.status(200).json(todos);
+    const searchKey = req.query.searchKey || "";
+
+    const filteredTodos = await Todo.find({
+      title: { $regex: searchKey, $options: "i" },
+    });
+
+    return res.status(200).json(filteredTodos);
   } catch (error) {
     console.error("Error fetching todos:", error);
     return res.status(500).json({ message: error.message });
