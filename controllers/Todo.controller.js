@@ -3,12 +3,13 @@ const Todo = require("../models/Todos.model");
 const getAllTodos = async (req, res) => {
   try {
     const todos = await Todo.find({});
-    if (!todos) {
-      res.status(400).json({ message: "No Tasks Found" });
+    if (todos.length === 0) {
+      return res.status(200).json([]);
     }
-    res.status(200).json(todos);
+    return res.status(200).json(todos);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching todos:", error);
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -17,7 +18,9 @@ const AddTodo = async (req, res) => {
     const { title, description } = req.body;
 
     if (!title || !description) {
-      res.status(400).json({ message: "Tile and Description are required" });
+      return res
+        .status(400)
+        .json({ message: "Title and Description are required" });
     }
 
     const newTodo = new Todo({
@@ -27,13 +30,14 @@ const AddTodo = async (req, res) => {
     });
 
     const savedTodo = await newTodo.save();
-
-    res
+    return res
       .status(201)
       .json({ message: "Todo created successfully", data: savedTodo });
   } catch (error) {
     console.error("Error in AddTodo:", error);
-    res.status(500).json({ message: "Server Error", error });
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
   }
 };
 
