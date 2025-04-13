@@ -11,8 +11,17 @@ const TodoSchema = mongoose.Schema({
   },
   time: {
     type: Date,
-    required: false
-  }
+    required: false,
+  },
+  isPinned: {
+    type: Boolean,
+    default: false,
+  },
+  pinnedAt: {
+    type: Date,
+    default: null,
+  },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const Todo = mongoose.model("Todo", TodoSchema);
