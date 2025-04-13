@@ -6,7 +6,9 @@ const getAllTodos = async (req, res) => {
 
     const filteredTodos = await Todo.find({
       title: { $regex: searchKey, $options: "i" },
-    });
+    })
+      .sort({ isPinned: -1, pinnedAt: -1 })
+      .exec();
 
     return res.status(200).json(filteredTodos);
   } catch (error) {
@@ -103,9 +105,29 @@ const deleteTodo = async (req, res) => {
   }
 };
 
+const togglePinTodo = async(req,res) =>{
+  try {
+    const {id} = req.params;
+    const todo = await Todo.findById(id);
+
+    if (!todo) return res.status(404).json({ message: "Todo not found" });
+
+    const isPinned = !todo.isPinned;
+    todo.isPinned = isPinned;
+    todo.pinnedAt = isPinned ? new Date() : null;
+
+    await todo.save();
+    return res.status(200).json({message: "Todo Pinned Successfully!"})
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message: "An Error occured while pinning todo"});
+  }
+}
+
 module.exports = {
   getAllTodos,
   AddTodo,
   EditTodo,
   deleteTodo,
+  togglePinTodo
 };
