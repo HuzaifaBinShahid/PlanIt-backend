@@ -81,9 +81,22 @@ const EditTodo = async (req, res) => {
   }
 };
 
-const deleteTodo = async (req, res) => {
+const deleteTodos = async (req, res) => {
   try {
     const { id } = req.params;
+    const { ids } = req.body;
+
+    if (ids && Array.isArray(ids) && ids.length > 0) {
+      const deleteResult = await Todo.deleteMany({ _id: { $in: ids } });
+
+      if (deleteResult.deletedCount === 0) {
+        return res.status(404).json({ message: "Todos not found" });
+      }
+
+      return res.status(200).json({
+        message: `${deleteResult.deletedCount} Todos Deleted Successfully`,
+      });
+    }
 
     if (!id) {
       return res.status(400).json({ message: "Todo ID is required" });
@@ -105,9 +118,9 @@ const deleteTodo = async (req, res) => {
   }
 };
 
-const togglePinTodo = async(req,res) =>{
+const togglePinTodo = async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const todo = await Todo.findById(id);
 
     if (!todo) return res.status(404).json({ message: "Todo not found" });
@@ -117,17 +130,17 @@ const togglePinTodo = async(req,res) =>{
     todo.pinnedAt = isPinned ? new Date() : null;
 
     await todo.save();
-    return res.status(200).json({message: "Todo Pinned Successfully!"})
+    return res.status(200).json({ message: "Todo Pinned Successfully!" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({message: "An Error occured while pinning todo"});
+    res.status(500).json({ message: "An Error occured while pinning todo" });
   }
-}
+};
 
 module.exports = {
   getAllTodos,
   AddTodo,
   EditTodo,
-  deleteTodo,
-  togglePinTodo
+  deleteTodos,
+  togglePinTodo,
 };
