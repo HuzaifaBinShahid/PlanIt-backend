@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   getAllTodos,
   AddTodo,
-  deleteTodo,
+  deleteTodos,
   EditTodo,
   togglePinTodo,
 } = require("../controllers/Todo.controller");
@@ -15,7 +15,7 @@ router.post("/addTodo", AddTodo);
 
 router.put("/editTodo/:id", EditTodo);
 
-router.delete("/deleteTodo/:id", deleteTodo);
+router.delete("/deleteTodo/:id", deleteTodos);
 
 router.post("/pinTodo/:id", togglePinTodo);
 
