@@ -83,8 +83,8 @@ const EditTodo = async (req, res) => {
 
 const deleteTodos = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { ids } = req.body;
+    const id = req.params.id;
+    const ids = req.body && Array.isArray(req.body.ids) ? req.body.ids : null;
 
     if (ids && Array.isArray(ids) && ids.length > 0) {
       const deleteResult = await Todo.deleteMany({ _id: { $in: ids } });
