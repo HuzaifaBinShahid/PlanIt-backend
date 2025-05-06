@@ -17,6 +17,8 @@ router.put("/editTodo/:id", EditTodo);
 
 router.delete("/deleteTodo/:id", deleteTodos);
 
+router.delete("/deleteTodos", deleteTodos);
+
 router.post("/pinTodo/:id", togglePinTodo);
 
 module.exports = router;
